@@ -1,0 +1,55 @@
+# Node
+node_modules/
+.npm
+npm_cache/
+.npm_cache/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Runtime data
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+coverage/
+.nyc_output/
+
+# Build outputs
+dist/
+build/
+tmp/
+temp/
+
+# TypeScript
+*.tsbuildinfo
+
+# dotenv environment variables
+.env
+.env.*.local
+
+# Certificates and keys
+cert/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+
+# Mac/Windows
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
+
+# Misc
+.cache/
+.parcel-cache/
+.eslintcache

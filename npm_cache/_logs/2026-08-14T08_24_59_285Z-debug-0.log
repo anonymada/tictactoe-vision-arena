@@ -1,0 +1,23 @@
+0 verbose cli D:\nvm4w\nodejs\node.exe D:\nvm4w\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@11.14.1
+2 info using node@v22.17.0
+3 silly config load:file:D:\nvm\v22.17.0\node_modules\npm\npmrc
+4 silly config load:file:d:\PROJECTS\PROJECTS_IA\TTT\tictactoe-vision-arena\.npmrc
+5 silly config load:file:C:\Users\bmwai\.npmrc
+6 silly config load:file:D:\nvm4w\nodejs\etc\npmrc
+7 verbose title npm outdated
+8 verbose argv "outdated" "--json"
+9 verbose logfile logs-max:10 dir:d:\PROJECTS\PROJECTS_IA\TTT\tictactoe-vision-arena\npm_cache\_logs\2026-08-14T08_24_59_285Z-
+10 verbose logfile d:\PROJECTS\PROJECTS_IA\TTT\tictactoe-vision-arena\npm_cache\_logs\2026-08-14T08_24_59_285Z-debug-0.log
+11 silly logfile start cleaning logs, removing 1 files
+12 silly packumentCache heap:2197815296 maxSize:549453824 maxEntrySize:274726912
+13 silly logfile done cleaning log files
+14 http fetch GET 200 https://registry.npmjs.org/express 852ms (cache revalidated)
+15 http fetch GET 200 https://registry.npmjs.org/socket.io 868ms (cache revalidated)
+16 http fetch GET 200 https://registry.npmjs.org/nodemon 1183ms (cache revalidated)
+17 verbose cwd d:\PROJECTS\PROJECTS_IA\TTT\tictactoe-vision-arena
+18 verbose os Windows_NT 10.0.26200
+19 verbose node v22.17.0
+20 verbose npm  v11.14.1
+21 verbose exit 1
+22 verbose code 1
