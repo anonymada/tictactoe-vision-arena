@@ -1,112 +1,127 @@
-TicTacToe Vision Arena
-======================
+# TicTacToe Vision Arena
 
-Petit serveur pédagogique pour organiser des parties TicTacToe entre deux smartphones exécutant une IA/vision locale.
+Petit serveur pour organiser une partie de TicTacToe entre plusieurs smartphones ou clients du même réseau local.
 
-Important: le serveur n'exécute AUCUNE IA et AUCUNE vision. Les smartphones sont considérés comme des joueurs autonomes qui POSTENT leurs coups.
+Le but est simple :
+- un serveur central garde l'état du jeu,
+- les clients envoient leurs coups via API ou WebSocket,
+- une interface web permet de suivre la partie en temps réel.
 
-Structure
----------
+Cette image Docker est pensée pour être lancée facilement sur un poste local et utilisée depuis un smartphone connecté au même réseau Wi‑Fi.
 
-server/
-  server.js       - serveur HTTP + Socket.IO (HTTPS optionnel)
-  api.js          - routes REST (register, move, state)
-  gameManager.js  - logique de gestion de partie (règles, grille, détection victoire)
+## À quoi sert ce projet ?
 
-public/
-  index.html      - interface de monitoring (1 page)
-  app.js          - client JS (Socket.IO)
-  style.css       - styles
+Ce projet ne fait ni vision, ni IA. Il sert uniquement à :
+- gérer l'état du plateau,
+- enregistrer les joueurs,
+- accepter les coups,
+- diffuser les mises à jour via Socket.IO,
+- exposer une interface de monitoring simple.
 
-cert/
-  cert.pem        - certificat auto-signé (non fourni)
-  key.pem         - clé privée (non fournie)
+Il est conçu pour être utilisé dans un cadre pédagogique ou de démonstration.
 
-Fonctionnement
---------------
+## Démarrage rapide
 
-API REST (très simple)
+### 1) Récupérer l'image
 
-POST /register
-Body: { "name": "Equipe Alpha" }
-Returns: { "player": "X" }
+```bash
+docker pull anonymada/tictactoevisionarena:latest
+```
 
-POST /move
-Body: { "player": "X", "row": 1, "col": 2 }
-Returns: { success: true, board: [...], nextPlayer: "O", winner: null }
+### 2) Vérifier votre adresse IP locale
 
-GET /state
-Returns full state: plateau, joueur courant, vainqueur, statistiques, journal
+Sur votre machine hôte :
 
-WebSocket (Socket.IO)
----------------------
-Toutes les modifications de l'état sont immédiatement diffusées via Socket.IO sur l'événement 'state'. L'UI publique s'abonne pour suivre la partie en temps réel.
+```bash
+hostname -I
+```
 
-HTTPS / HTTP
--------------
-Par défaut ce serveur fonctionne en HTTP pour simplifier le développement local (http://localhost:3000).
+Par exemple, cela peut afficher :
 
-Important : l'accès à la caméra via getUserMedia dans un navigateur moderne est généralement restreint aux pages servies en HTTPS.
+```bash
+192.168.1.25 172.17.0.1
+```
 
-Options :
-- Développement local sans HTTPS : ouvrir http://localhost:3000 et, selon le navigateur, activer l'option "Allow insecure localhost" pour autoriser getUserMedia sur localhost.
-- Utiliser HTTPS (recommandé pour tests caméra réels) : générer un certificat auto-signé et démarrer le serveur en HTTPS. Pour cela, créer cert/key et adapter server.js pour charger les certificats (le projet fournit la logique pour HTTPS dans une version alternative).
+La bonne adresse à utiliser pour un smartphone sur le même réseau local est souvent la première IP non Docker, ici :
 
-Générer un certificat auto-signé (OpenSSL)
------------------------------------------
+```bash
+192.168.1.25
+```
 
-Sur un poste de développement (Linux / macOS / Windows avec OpenSSL installé), exécuter :
+### 3) Créer un fichier .env
 
-openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout key.pem -out cert.pem -subj "/CN=localhost"
+```env
+SERVER_HOST=192.168.1.25
+PORT=3000
+```
 
-Puis mettre les fichiers key.pem et cert.pem dans le dossier cert/ à la racine du projet si tu veux démarrer en HTTPS.
+### 4) Lancer le conteneur
 
-Démarrage
----------
+```bash
+docker run --rm -d --env-file .env -p 3000:3000 anonymada/tictactoevisionarena:latest
+```
 
-1. Installer les dépendances (express, socket.io) :
-   npm init -y
-   npm install express socket.io
+### 5) Ouvrir l'application
 
-2. Lancer le serveur :
-   node server/server.js
+Dans le navigateur du téléphone ou de l'ordinateur du même réseau :
 
-3. Ouvrir le navigateur à :
-   http://localhost:3000/ (ou https://localhost:3443 si tu as configuré et démarré le serveur en HTTPS)
+```text
+http://192.168.1.25:3000
+```
 
-Vision (explication pour les smartphones)
-----------------------------------------
-Le serveur NE fait PAS de vision.
+## Important : pourquoi ne pas utiliser 172.x.x.x ?
 
-Recommandation de plateau (A4 imprimé) :
-- Fond blanc
-- Grille 3x3 avec traits noirs épais
-- Quatre marqueurs ArUco (un dans chaque coin) pour la détection d'orientation
-- Grandes cases (chaque case suffisamment grande pour que la caméra et le modèle OCR/vision puissent reconnaître X/O)
+Les adresses `172.x.x.x` proviennent souvent du réseau Docker interne (`docker0`, bridge, etc.).
 
-Le smartphone doit :
-- détecter la feuille et corriger la perspective (grâce aux ArUco)
-- découper les 9 cases
-- déterminer l'état du plateau
-- décider son prochain coup
-- appeler POST /move sur le serveur pour jouer
+Elles ne correspondent pas à l'IP de votre machine sur le réseau local.
 
-Règles appliquées par le serveur
--------------------------------
-Le serveur est l'autorité :
-- Refuse les coups hors-tour
-- Refuse de jouer sur une case occupée
-- Refuse les coups après la fin de la partie
+Si vous voyez une IP en `172.x`, cela signifie en général que le conteneur est sur un réseau Docker interne, et non sur votre Wi‑Fi LAN.
 
-Conception pédagogique
-----------------------
-Le code est volontairement simple et commenté pour être utilisé en TP ou en cours. L'architecture est modulaire pour faciliter des extensions futures (plusieurs parties, tournois, historique) sans changer l'API actuelle.
+C'est pourquoi il est important de fournir explicitement `SERVER_HOST` avec l'IP réelle de votre hôte.
 
-Extensibilité (bonus)
-----------------------
-- gameManager.js est centralisé pour permettre de gérer plusieurs instances (une par match) ultérieurement
-- API actuelle peut être étendue pour supporter plusieurs parties sans modifier les endpoints existants (même signature, ajout d'un paramètre matchId)
+## Variables d'environnement
 
-Licence
--------
-Projet d'exemple éducatif.
+| Variable | Description | Exemple |
+| --- | --- | --- |
+| `SERVER_HOST` | IP du host sur le réseau local, accessible depuis les clients | `192.168.1.25` |
+| `PORT` | Port exposé par le conteneur | `3000` |
+
+## Endpoints disponibles
+
+### Interface web
+
+```text
+http://<HOST_IP>:3000/
+```
+
+### API
+
+- `GET /state` : état actuel de la partie
+- `POST /register` : enregistrement d'un joueur
+- `POST /move` : jouer un coup
+- `GET /host` : renvoie l'URL du serveur
+
+### WebSocket
+
+Le serveur expose un flux Socket.IO sur le même host/port.
+
+## Exemple de lancement avec un hôte Linux
+
+```bash
+HOST_IP=$(hostname -I | tr ' ' '\n' | grep -v '^127\.' | grep -v '^172\.' | head -n 1)
+
+echo "SERVER_HOST=$HOST_IP" > .env
+echo "PORT=3000" >> .env
+
+docker run --rm -d --env-file .env -p 3000:3000 anonymada/tictactoevisionarena:latest
+```
+
+## Notes
+
+- Le serveur est livré en HTTP simple par défaut.
+- Pour un usage réel de caméra dans le navigateur, il faudra généralement passer en HTTPS.
+- Le but de ce projet est surtout la démonstration et l'usage local sur le réseau.
+
+## Licence
+
+Projet pédagogique et de démonstration.
