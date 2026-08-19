@@ -15,11 +15,11 @@
 
   <main>
     <section class="players">
-      <div class="player" id="playerX">
-        <h2>Joueur X</h2>
-        <div class="name" id="nameX">-</div>
-        <div class="status" id="statusX">Déconnecté</div>
-        <div class="avg" id="avgX">— ms</div>
+      <div id="leftPanel" class="left-panel">
+        <h2>Connexion</h2>
+        <div>Adresse du serveur : <strong id="hostAddr">—</strong></div>
+        <div style="margin-top:8px;"><button id="copyHostBtn">Copier l'adresse</button></div>
+        <div id="inviteNote" style="margin-top:8px;color:#666;">Invitez les smartphones à se connecter à cette adresse depuis le réseau local.</div>
       </div>
 
       <div class="board-container">
@@ -42,11 +42,20 @@
         </div>
       </div>
 
-      <div class="player" id="playerO">
-        <h2>Joueur O</h2>
-        <div class="name" id="nameO">-</div>
-        <div class="status" id="statusO">Déconnecté</div>
-        <div class="avg" id="avgO">— ms</div>
+      <div id="rightPanel" class="right-panel">
+        <div class="player" id="playerX">
+          <h2>Joueur X</h2>
+          <div class="name" id="nameX">-</div>
+          <div class="status" id="statusX">Déconnecté</div>
+          <div class="avg" id="avgX">— ms</div>
+        </div>
+
+        <div class="player" id="playerO">
+          <h2>Joueur O</h2>
+          <div class="name" id="nameO">-</div>
+          <div class="status" id="statusO">Déconnecté</div>
+          <div class="avg" id="avgO">— ms</div>
+        </div>
       </div>
     </section>
 

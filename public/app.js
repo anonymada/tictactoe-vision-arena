@@ -91,6 +91,37 @@ socket.on('state', (state) => {
 // initial fetch as fallback
 fetch('/state').then(r => r.json()).then(s => renderState(s)).catch(()=>{});
 
+// Fetch host address to invite smartphones
+async function fetchHost() {
+  try {
+    const r = await fetch('/host');
+    if (!r.ok) return;
+    const j = await r.json();
+    if (!j || !j.server) return;
+    const server = j.server;
+    const elHost = el('hostAddr');
+    if (elHost) elHost.textContent = server;
+  } catch (e) {
+    console.warn('Host fetch failed', e);
+  }
+}
+fetchHost();
+
+// copy host button
+const copyHostBtn = el('copyHostBtn');
+if (copyHostBtn) {
+  copyHostBtn.addEventListener('click', async () => {
+    const host = el('hostAddr').textContent;
+    try {
+      await navigator.clipboard.writeText(host);
+      copyHostBtn.textContent = 'Copié !';
+      setTimeout(() => copyHostBtn.textContent = 'Copier l\'adresse', 1500);
+    } catch (e) {
+      alert('Impossible de copier');
+    }
+  });
+}
+
 // reset button handler
 const resetBtn = el('resetBtn');
 if (resetBtn) {

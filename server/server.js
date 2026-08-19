@@ -14,9 +14,29 @@ const path = require('path');
 const express = require('express');
 const http = require('http');
 const GameManager = require('./gameManager');
+const hostDetector = require('./hostDetector');
+let detectedHostUrl = null;
+try { detectedHostUrl = hostDetector.getHostUrl(); } catch (e) { detectedHostUrl = null; }
 
 const app = express();
 app.use(express.json());
+
+// CORS: allow any origin (per requirement)
+// This middleware sets permissive CORS headers. It intentionally allows any origin,
+// and responds to OPTIONS preflight requests for browsers.
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  // Optional: allow credentials if needed (not used here)
+  // res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  if (req.method === 'OPTIONS') {
+    // Preflight request
+    return res.sendStatus(204);
+  }
+  next();
+});
 
 // static UI
 app.use(express.static(path.join(__dirname, '..', 'public')));
@@ -46,6 +66,16 @@ if (useWebnative) {
 // Mount API with access to gm and io
 const apiRouter = require('./api')(gm, io);
 app.use('/', apiRouter);
+
+// Host discovery endpoint (no QR): returns simple host URL that clients can use to connect
+app.get('/host', (req, res) => {
+  try {
+    const url = detectedHostUrl || hostDetector.getHostUrl();
+    return res.json({ server: url });
+  } catch (e) {
+    return res.json({ server: `http://localhost:${process.env.PORT || 3000}` });
+  }
+});
 
 // Socket connections for UI (monitor) and optionally to link smartphone websockets
 io.on('connection', (socket) => {
@@ -83,3 +113,5 @@ const PORT = process.env.PORT || 3000;
 server.listen(PORT, () => {
   console.log(`TicTacToe Vision Arena server running on http://localhost:${PORT}`);
 });
+
+
