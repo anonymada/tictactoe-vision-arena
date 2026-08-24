@@ -105,6 +105,10 @@ http://<HOST_IP>:3000/
 
 Le serveur expose un flux Socket.IO sur le même host/port.
 
+### API DOCS
+
+Find the `API Document` here [`docs/api.md`](docs/api.md).
+
 ## Exemple de lancement avec un hôte Linux
 
 ```bash
