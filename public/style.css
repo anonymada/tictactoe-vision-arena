@@ -46,10 +46,10 @@ main { display: flex; gap: 20px; padding: 20px; }
   border-radius: 6px;
   z-index: 20;
 }
-.marker-a0 { left: -56px; top: -56px; }
-.marker-a1 { right: -56px; top: -56px; }
-.marker-a2 { right: -56px; bottom: -56px; }
-.marker-a3 { left: -56px; bottom: -56px; }
+.marker-a0 { left: -80px; top: -80px; }
+.marker-a1 { right: -80px; top: -80px; }
+.marker-a2 { right: -80px; bottom: -80px; }
+.marker-a3 { left: -80px; bottom: -80px; }
 
 /* cells: keep them plain white and center content */
 .cell {
