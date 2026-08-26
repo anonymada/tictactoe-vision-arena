@@ -3,23 +3,32 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>TicTacToe Vision Arena</title>
+  <title>TicTacToe</title>
   <link rel="stylesheet" href="style.css">
   <script src="/socket.io/socket.io.js" defer></script>
   <script src="app.js" defer></script>
 </head>
 <body>
   <header>
-    <h1>TicTacToe Vision Arena</h1>
+    <h1>TicTacToe</h1>
   </header>
 
   <main>
     <section class="players">
-      <div id="leftPanel" class="left-panel">
-        <h2>Connexion</h2>
-        <div>Adresse du serveur : <strong id="hostAddr">—</strong></div>
-        <div style="margin-top:8px;"><button id="copyHostBtn">Copier l'adresse</button></div>
-        <div id="inviteNote" style="margin-top:8px;color:#666;">Invitez les smartphones à se connecter à cette adresse depuis le réseau local.</div>
+      <div class="left-column">
+        <div id="leftPanel" class="left-panel">
+          <h2>Connexion</h2>
+          <div>Adresse du serveur : <strong id="hostAddr">—</strong></div>
+          <div style="margin-top:8px;"><button id="copyHostBtn">Copier l'adresse</button></div>
+          </div>
+
+        <div class="match-info">
+          <div>Tour actuel: <span id="currentPlayer">-</span></div>
+          <div>Nombre de coups: <span id="moveCount">0</span></div>
+          <div>Temps de partie: <span id="timeElapsed">0s</span></div>
+          <div>État: <span id="gameStatus">En attente</span></div>
+          <div style="margin-top:8px;"><button id="resetBtn">Réinitialiser la partie</button></div>
+        </div>
       </div>
 
       <div class="board-container">
@@ -32,13 +41,6 @@
           <!-- 3x3 cells inserted by JS -->
         </div>
 
-        <div class="match-info">
-          <div>Tour actuel: <span id="currentPlayer">-</span></div>
-          <div>Nombre de coups: <span id="moveCount">0</span></div>
-          <div>Temps de partie: <span id="timeElapsed">0s</span></div>
-          <div>État: <span id="gameStatus">En attente</span></div>
-          <div style="margin-top:8px;"><button id="resetBtn">Réinitialiser la partie</button></div>
-        </div>
       </div>
 
       <div id="rightPanel" class="right-panel">
@@ -55,12 +57,12 @@
           <div class="status" id="statusO">Déconnecté</div>
           <div class="avg" id="avgO">— ms</div>
         </div>
-      </div>
-    </section>
 
-    <section class="log">
-      <h3>Journal</h3>
-      <ul id="logList"></ul>
+        <section class="log">
+          <h3>Journal</h3>
+          <ul id="logList"></ul>
+        </section>
+      </div>
     </section>
   </main>
 

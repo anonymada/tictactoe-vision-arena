@@ -3,10 +3,11 @@ body { background: #f4f6f8; margin: 0; color: #222; }
 header { background: #1e90ff; color: white; padding: 12px 20px; }
 header h1 { margin: 0; font-size: 20px; }
 
-main { display: flex; gap: 20px; padding: 20px; }
+main { display: flex; flex-direction: column; gap: 20px; padding: 20px; }
 .players { display:flex; gap:20px; align-items:flex-start; width:100%; }
+.left-column { width: 220px; display:flex; flex-direction:column; gap:12px; }
 .left-panel { width: 220px; background: white; padding:12px; border-radius:8px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
-.right-panel { width: 220px; display:flex; flex-direction:column; gap:12px; }
+.right-panel { width: 320px; display:flex; flex-direction:column; gap:12px; }
 .board-container { flex: 1; display: flex; flex-direction: column; align-items: center; min-width: 460px; }
 .players { display: flex; gap: 20px; align-items: flex-start; width: 100%; }
 .player { background: white; padding: 12px; border-radius: 8px; width: 200px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
@@ -56,7 +57,7 @@ main { display: flex; gap: 20px; padding: 20px; }
   align-items:center;
   justify-content:center;
   background: #fff;
-  font-size: 140px;
+  font-size: 110px;
   font-weight: 900;
   color: #000;
   user-select: none;
@@ -89,7 +90,7 @@ main { display: flex; gap: 20px; padding: 20px; }
 /* subtle flash animation when a move appears (kept simple) */
 .cell.flash { background: #fffbeb; transform: scale(1.02); transition: transform 200ms ease, background 200ms ease; }
 
-.match-info { margin-top: 12px; background: white; padding: 10px; border-radius: 8px; width: 380px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
+.match-info { background: white; padding: 10px; border-radius: 8px; width: 100%; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
 .log { width: 320px; }
 .log h3 { margin-top: 0; }
 .log ul { list-style: none; padding: 10px; margin: 0; max-height: 420px; overflow: auto; background: white; border-radius:8px; box-shadow: 0 2px 6px rgba(0,0,0,0.06); }
@@ -99,9 +100,12 @@ main { display: flex; gap: 20px; padding: 20px; }
 @media (max-width: 900px) {
   main { flex-direction: column; }
   .players { flex-direction: column; }
+  .left-column { width: 100%; }
+  .left-panel, .right-panel { width: 100%; }
+  .right-panel { align-items: stretch; }
   .board-container { min-width: auto; }
   .board { width: min(100%, 360px); height: min(100%, 360px); }
-  .cell { font-size: 60px; }
+  .cell { font-size: 48px; }
   .match-info { width: 100%; }
   .log { width: 100%; }
 }

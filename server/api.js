@@ -24,10 +24,14 @@ module.exports = function api(gameManager, io) {
   router.post('/move', (req, res) => {
     try {
       const { player, row, col } = req.body;
-      if (typeof player === 'undefined' || typeof row === 'undefined' || typeof col === 'undefined') {
-        return res.status(400).json({ error: 'Missing fields' });
-      }
-      const state = gameManager.move(player, Number(row), Number(col));
+      if (typeof player === 'undefined') throw new Error('Invalid player');
+      if (typeof row === 'undefined' || typeof col === 'undefined') throw new Error('Invalid cell');
+
+      const parsedRow = Number(row);
+      const parsedCol = Number(col);
+      if (!Number.isInteger(parsedRow) || !Number.isInteger(parsedCol)) throw new Error('Invalid cell');
+
+      const state = gameManager.move(player, parsedRow, parsedCol);
       if (io) io.emit('state', state);
       return res.json({ success: true, board: state.board, nextPlayer: state.currentPlayer, winner: state.winner });
     } catch (err) {
@@ -51,7 +55,7 @@ module.exports = function api(gameManager, io) {
       const state = gameManager.getState();
       gameManager._log && typeof gameManager._log === 'function' && gameManager._log('Game reset via API');
       if (io) io.emit('state', state);
-      return res.json({ success: true, state });
+      return res.json({ success: true, reset: true, message: 'Partie réinitialisée', state });
     } catch (err) {
       return res.status(500).json({ success: false, error: err.message });
     }

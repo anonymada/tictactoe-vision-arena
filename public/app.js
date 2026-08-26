@@ -132,6 +132,7 @@ if (resetBtn) {
       const j = await r.json();
       // server will broadcast new state via websocket, but update immediately if provided
       if (j && j.state) renderState(j.state);
+      if (j && j.reset === true) alert(j.message || 'Partie réinitialisée');
     } catch (e) {
       console.error('Reset failed', e);
       alert('Erreur lors de la réinitialisation');
