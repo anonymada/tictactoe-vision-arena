@@ -15,6 +15,7 @@ const express = require('express');
 const http = require('http');
 const GameManager = require('./gameManager');
 const hostDetector = require('./hostDetector');
+const documentationRouter = require("../docs/docs");
 let detectedHostUrl = null;
 try { detectedHostUrl = hostDetector.getHostUrl(); } catch (e) { detectedHostUrl = null; }
 
@@ -76,6 +77,9 @@ app.get('/host', (req, res) => {
     return res.json({ server: `http://localhost:${process.env.PORT || 3000}` });
   }
 });
+
+// Documentation
+app.use("/docs", documentationRouter);
 
 // Socket connections for UI (monitor) and optionally to link smartphone websockets
 io.on('connection', (socket) => {

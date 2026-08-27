@@ -49,6 +49,7 @@ function renderState(state) {
       const cell = el(`cell-${r}-${c}`);
       if (cell) {
         cell.textContent = val || '';
+        cell.dataset.value= val || '';
       }
     }
   }

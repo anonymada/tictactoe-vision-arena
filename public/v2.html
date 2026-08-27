@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>TicTacToe Vision Arena</title>
+    <style>
+      :root {
+        --grid-line-width: 35px;
+      }
+      .cell[data-value="X"] {
+        color: red !important;
+      }
+
+      .cell[data-value="O"] {
+        color: green !important;
+      }
+    </style>
+    <link rel="stylesheet" href="style.css" />
+    <script src="/socket.io/socket.io.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body>
+    <header>
+      <h1>TicTacToe Vision Arena</h1>
+    </header>
+
+    <main>
+      <section class="players">
+        <div id="leftPanel" class="left-panel">
+          <h2>Connexion</h2>
+          <div>Adresse du serveur : <strong id="hostAddr">—</strong></div>
+          <div style="margin-top: 8px">
+            <button id="copyHostBtn">Copier l'adresse</button>
+          </div>
+          <div id="inviteNote" style="margin-top: 8px; color: #666">
+            Invitez les smartphones à se connecter à cette adresse depuis le
+            réseau local.
+          </div>
+        </div>
+
+        <div class="board-container">
+          <!-- Printable, high-contrast board optimized for vision (ArUco markers in corners) -->
+          <div
+            id="board"
+            class="board"
+            role="img"
+            aria-label="Plateau TicTacToe imprimable"
+          >
+            <!-- corner markers (visual placeholders for ArUco) -->
+            <!-- <div class="marker marker-a0" id="markerA0">A0</div>
+          <div class="marker marker-a1" id="markerA1">A1</div>
+          <div class="marker marker-a2" id="markerA2">A2</div>
+          <div class="marker marker-a3" id="markerA3">A3</div> -->
+            <!-- 3x3 cells inserted by JS -->
+          </div>
+
+          <div class="match-info">
+            <div>Tour actuel: <span id="currentPlayer">-</span></div>
+            <div>Nombre de coups: <span id="moveCount">0</span></div>
+            <div>Temps de partie: <span id="timeElapsed">0s</span></div>
+            <div>État: <span id="gameStatus">En attente</span></div>
+            <div style="margin-top: 8px">
+              <button id="resetBtn">Réinitialiser la partie</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="rightPanel" class="right-panel">
+          <div class="player" id="playerX">
+            <h2>Joueur X</h2>
+            <div class="name" id="nameX">-</div>
+            <div class="status" id="statusX">Déconnecté</div>
+            <div class="avg" id="avgX">— ms</div>
+          </div>
+
+          <div class="player" id="playerO">
+            <h2>Joueur O</h2>
+            <div class="name" id="nameO">-</div>
+            <div class="status" id="statusO">Déconnecté</div>
+            <div class="avg" id="avgO">— ms</div>
+          </div>
+        </div>
+      </section>
+
+      <section class="log">
+        <h3>Journal</h3>
+        <ul id="logList"></ul>
+      </section>
+    </main>
+  </body>
+</html>

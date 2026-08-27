@@ -24,7 +24,7 @@ main { display: flex; flex-direction: column; gap: 20px; padding: 20px; }
   width: 600px; /* fixed size for printing/vision */
   height: 600px;
   background: #fff;
-  border: 18px solid #000; /* thick outer border */
+  border: var(--grid-line-width) solid #000; /* thick outer border */
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
@@ -70,7 +70,7 @@ main { display: flex; flex-direction: column; gap: 20px; padding: 20px; }
   z-index: 10;
 }
 .grid-line.vertical {
-  width: 16px;
+  width: var(--grid-line-width);
   top: 0;
   bottom: 0;
   transform: translateX(-50%);
@@ -79,7 +79,7 @@ main { display: flex; flex-direction: column; gap: 20px; padding: 20px; }
 .grid-line.vertical.line-2 { left: calc(100% / 3 * 2); }
 
 .grid-line.horizontal {
-  height: 16px;
+  height: var(--grid-line-width);
   left: 0;
   right: 0;
   transform: translateY(-50%);
