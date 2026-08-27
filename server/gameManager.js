@@ -33,13 +33,6 @@ class GameManager extends EventEmitter {
     this.log = [];
   }
 
-  _log(entry) {
-    const time = new Date().toISOString();
-    this.log.unshift(`[${time}] ${entry}`);
-    // keep last 200 entries
-    if (this.log.length > 200) this.log.length = 200;
-  }
-
   register(name, socketId) {
     // If X empty assign X, else O if empty
     let assigned = null;
@@ -67,45 +60,6 @@ class GameManager extends EventEmitter {
 
     this.emit('update', this.getState());
     return assigned;
-  }
-
-  unregisterBySocket(socketId) {
-    // mark player disconnected if socket matches
-    ['X', 'O'].forEach(p => {
-      const pl = this.players[p];
-      if (pl && pl.socketId === socketId) {
-        pl.connected = false;
-        this._log(`Player disconnected: ${pl.name} (${p})`);
-      }
-    });
-    this.emit('update', this.getState());
-  }
-
-  _checkWin() {
-    const b = this.board;
-    const lines = [
-      // rows
-      [b[0][0], b[0][1], b[0][2]],
-      [b[1][0], b[1][1], b[1][2]],
-      [b[2][0], b[2][1], b[2][2]],
-      // cols
-      [b[0][0], b[1][0], b[2][0]],
-      [b[0][1], b[1][1], b[2][1]],
-      [b[0][2], b[1][2], b[2][2]],
-      // diags
-      [b[0][0], b[1][1], b[2][2]],
-      [b[0][2], b[1][1], b[2][0]],
-    ];
-
-    for (const line of lines) {
-      if (line[0] && line[0] === line[1] && line[1] === line[2]) {
-        return line[0];
-      }
-    }
-    // draw if full
-    const full = this.board.every(row => row.every(cell => cell !== null));
-    if (full) return 'draw';
-    return null;
   }
 
   move(player, row, col) {
@@ -175,6 +129,52 @@ class GameManager extends EventEmitter {
       },
       log: this.log.slice(0, 100),
     };
+  }
+
+  unregisterBySocket(socketId) {
+    // mark player disconnected if socket matches
+    ['X', 'O'].forEach(p => {
+      const pl = this.players[p];
+      if (pl && pl.socketId === socketId) {
+        pl.connected = false;
+        this._log(`Player disconnected: ${pl.name} (${p})`);
+      }
+    });
+    this.emit('update', this.getState());
+  }
+
+ _checkWin() {
+    const b = this.board;
+    const lines = [
+      // rows
+      [b[0][0], b[0][1], b[0][2]],
+      [b[1][0], b[1][1], b[1][2]],
+      [b[2][0], b[2][1], b[2][2]],
+      // cols
+      [b[0][0], b[1][0], b[2][0]],
+      [b[0][1], b[1][1], b[2][1]],
+      [b[0][2], b[1][2], b[2][2]],
+      // diags
+      [b[0][0], b[1][1], b[2][2]],
+      [b[0][2], b[1][1], b[2][0]],
+    ];
+
+    for (const line of lines) {
+      if (line[0] && line[0] === line[1] && line[1] === line[2]) {
+        return line[0];
+      }
+    }
+    // draw if full
+    const full = this.board.every(row => row.every(cell => cell !== null));
+    if (full) return 'draw';
+    return null;
+  }
+
+   _log(entry) {
+    const time = new Date().toISOString();
+    this.log.unshift(`[${time}] ${entry}`);
+    // keep last 200 entries
+    if (this.log.length > 200) this.log.length = 200;
   }
 }
 
