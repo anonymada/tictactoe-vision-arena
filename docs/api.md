@@ -1,6 +1,5 @@
 # API Documentation
 
-
 ### Endpoints
 
 | Method | Endpoint    | Description                |
@@ -40,11 +39,11 @@ If `socketId` is not provided, the API passes `null` to `GameManager`.
 
 ### Success response
 
-**HTTP ****`200 OK`**
+**HTTP \*\***`200 OK`\*\*
 
 ```json
 {
-  "player": {}
+  "player": "X"
 }
 ```
 
@@ -52,7 +51,7 @@ If `socketId` is not provided, the API passes `null` to `GameManager`.
 
 If `name` is missing:
 
-**HTTP ****`400 Bad Request`**
+**HTTP \*\***`400 Bad Request`\*\*
 
 ```json
 {
@@ -74,9 +73,9 @@ Payload:
 
 ```json
 {
-  "player": 1,
-  "row": 0,
-  "col": 2
+  "player": "X",
+  "row": 1,
+  "col": 1
 }
 ```
 
@@ -84,19 +83,23 @@ Payload:
 
 | Field    | Type     | Required | Description       |
 | -------- | -------- | -------: | ----------------- |
-| `player` | `number` |      Yes | Player identifier |
+| `player` | `X`/`O`  |      Yes | Player identifier |
 | `row`    | `number` |      Yes | Board row         |
 | `col`    | `number` |      Yes | Board column      |
 
 ### Success response
 
-**HTTP ****`200 OK`**
+**HTTP \*\***`200 OK`\*\*
 
 ```json
 {
   "success": true,
-  "board": [],
-  "nextPlayer": 2,
+  "board": [
+    [null, null, null],
+    [null, "X", null],
+    [null, null, null]
+  ],
+  "nextPlayer": "O",
   "winner": null
 }
 ```
@@ -114,7 +117,7 @@ The response contains:
 
 If `player`, `row`, or `col` is missing:
 
-**HTTP ****`400 Bad Request`**
+**HTTP \*\***`400 Bad Request`\*\*
 
 ```json
 {
@@ -137,24 +140,59 @@ GET /state
 
 ### Success response
 
-**HTTP ****`200 OK`**
+**HTTP \*\***`200 OK`\*\*
 
 ```json
 {
-  "board": [],
-  "currentPlayer": 1,
-  "winner": null
+  "board": [
+    [null, null, null],
+    [null, "X", "O"],
+    [null, null, null]
+  ],
+  "currentPlayer": "X",
+  "winner": null,
+  "status": "in_progress",
+  "moveCount": 2,
+  "timeElapsed": 12,
+  "players": {
+    "X": {
+      "name": "Alice",
+      "connected": true,
+      "avgResponse": null
+    },
+    "O": {
+      "name": "Alice",
+      "connected": true,
+      "avgResponse": null
+    }
+  },
+  "log": [
+    "[2026-08-27T09:44:24.966Z] Move by O: (1,2)",
+    "[2026-08-27T09:44:20.687Z] Move by X: (1,1)",
+    "[2026-08-27T09:44:16.534Z] Game started",
+    "[2026-08-27T09:44:16.534Z] Player registered: Alice as O",
+    "[2026-08-27T09:44:14.781Z] Player registered: Alice as X"
+  ]
 }
 ```
 
 The response contains:
 
-| Field           | Description               |
-| --------------- | ------------------------- |
-| `board`         | Current Tic-Tac-Toe board |
-| `currentPlayer` | Player whose turn it is   |
-| `winner`        | Current winner state      |
-
+| Field                   | Description                                                                                              |
+| ----------------------- | -------------------------------------------------------------------------------------------------------- |
+| `board`                 | Current Tic-Tac-Toe board. Each cell contains `"X"`, `"O"`, or `null` if the cell is empty.              |
+| `currentPlayer`         | Player whose turn it is. Can be `"X"` or `"O"`.                                                          |
+| `winner`                | Current winner. Contains `"X"` or `"O"` when a player has won, or `null` when there is no winner.        |
+| `status`                | Current status of the game. For example, `"in_progress"` indicates that the game is still being played.  |
+| `moveCount`             | Number of moves currently played in the game.                                                            |
+| `timeElapsed`           | Elapsed time since the game started.                                                                     |
+| `players`               | Information about the players registered in the game.                                                    |
+| `players.X`             | Information about the player using the `"X"` mark.                                                       |
+| `players.O`             | Information about the player using the `"O"` mark.                                                       |
+| `players.*.name`        | Name of the registered player.                                                                           |
+| `players.*.connected`   | Indicates whether the player is currently connected. `true` means connected, `false` means disconnected. |
+| `players.*.avgResponse` | Average response time of the player. `null` when no response-time value is available.                    |
+| `log`                   | List of events recorded during the game, including player registration, game start, and moves.           |
 
 ---
 
@@ -176,29 +214,36 @@ POST /reset
 
 ### Success response
 
-**HTTP ****`200 OK`**
+**HTTP \*\***`200 OK`\*\*
 
 ```json
 {
   "success": true,
   "state": {
-    "board": [],
-    "currentPlayer": 1,
-    "winner": null
+    "board": [
+      [null, null, null],
+      [null, null, null],
+      [null, null, null]
+    ],
+    "currentPlayer": "X",
+    "winner": null,
+    "status": "waiting",
+    "moveCount": 0,
+    "timeElapsed": 0,
+    "players": {
+      "X": {
+        "name": null,
+        "connected": false,
+        "avgResponse": null
+      },
+      "O": {
+        "name": null,
+        "connected": false,
+        "avgResponse": null
+      }
+    },
+    "log": []
   }
-}
-```
-
-### Error response
-
-If an unexpected error occurs:
-
-**HTTP ****`500 Internal Server Error`**
-
-```json
-{
-  "success": false,
-  "error": "Error message"
 }
 ```
 
@@ -211,16 +256,6 @@ state
 ```
 
 with the new game state.
-
----
-
-# HTTP Status Codes
-
-| Status | Meaning                           | Used by                                  |
-| ------ | --------------------------------- | ---------------------------------------- |
-| `200`  | Request successfully processed    | `/register`, `/move`, `/state`, `/reset` |
-| `400`  | Invalid request or game operation | `/register`, `/move`                     |
-| `500`  | Internal server error             | `/reset`                                 |
 
 ---
 
@@ -242,7 +277,7 @@ The event is emitted after:
 Server-side implementation:
 
 ```js
-io.emit('state', state)
+io.emit("state", state);
 ```
 
 This means that **all connected Socket.IO clients receive the new/current game state**.
@@ -250,65 +285,12 @@ This means that **all connected Socket.IO clients receive the new/current game s
 ### Example client
 
 ```js
-socket.on('state', (state) => {
-  console.log('Game state:', state);
+socket.on("state", (state) => {
+  console.log("Game state:", state);
 });
 ```
 
 ---
-
-# API Usage Example
-
-A typical game flow can be:
-
-```text
-1. Register player
-        |
-        v
-POST /register
-        |
-        v
-2. Get game state
-        |
-        v
-GET /state
-        |
-        v
-3. Play a move
-        |
-        v
-POST /move
-        |
-        v
-4. Receive updated state
-   through Socket.IO
-        |
-        v
-5. Continue playing
-        |
-        v
-6. Reset when necessary
-        |
-        v
-POST /reset
-```
-
----
-
-## Real-time synchronization
-
-```text
-REST API
-    |
-    +-- POST /register
-    +-- POST /move
-    +-- GET  /state
-    +-- POST /reset
-
-Socket.IO
-    |
-    +-- state
-```
 
 ## Content-Type
 
