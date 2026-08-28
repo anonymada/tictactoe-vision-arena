@@ -126,6 +126,11 @@ docker run --rm -d --env-file .env -p 3000:3000 anonymada/tictactoevisionarena:l
 - Pour un usage réel de caméra dans le navigateur, il faudra généralement passer en HTTPS.
 - Le but de ce projet est surtout la démonstration et l'usage local sur le réseau.
 
+## Liens
+
+- Readme [`docs/`](docs/)
+- API Docs [`docs/api.md`](docs/api.md)
+
 ## Licence
 
 Projet pédagogique et de démonstration.
