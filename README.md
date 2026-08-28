@@ -107,7 +107,7 @@ Le serveur expose un flux Socket.IO sur le même host/port.
 
 ### API DOCS
 
-Find the `API Document` here [`docs/api.md`](docs/api).
+Find the `API Document` here [`docs/api.md`](docs/api.md).
 
 ## Exemple de lancement avec un hôte Linux
 
@@ -125,6 +125,11 @@ docker run --rm -d --env-file .env -p 3000:3000 anonymada/tictactoevisionarena:l
 - Le serveur est livré en HTTP simple par défaut.
 - Pour un usage réel de caméra dans le navigateur, il faudra généralement passer en HTTPS.
 - Le but de ce projet est surtout la démonstration et l'usage local sur le réseau.
+
+## Liens
+
+- Readme [`docs/`](docs/)
+- API Docs [`docs/api.md`](docs/api.md)
 
 ## Licence
 

@@ -120,7 +120,7 @@ router.get("/", (req, res) => {
 // API DOCUMENTATION
 // =========================
 
-router.get("/api", (req, res) => {
+router.get("/api.md", (req, res) => {
   try {
     const apiPath = path.join(
       __dirname,
